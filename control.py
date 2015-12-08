@@ -5,8 +5,6 @@ import subprocess
 import yaml
 from collections import namedtuple
 
-LOGFILE = 'ab_control.log'
-
 def write_config(argv):
     try:
         [filename] = argv
@@ -39,9 +37,7 @@ def call_script(filename, **envvars):
     for k, v in envvars.items():
         os.environ[k] = v
     # Launch script
-    output = subprocess.check_output(get_script(filename), shell=True)
-    with open(LOGFILE, 'a') as fout:
-        print(output, file=fout)
+    subprocess.check_call(get_script(filename), shell=True)
 
 
 def get_script(fileprefix):
