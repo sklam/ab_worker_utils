@@ -80,6 +80,7 @@ def main():
     commands = {
         'config': write_config,
         'start': start_worker,
+        'setup': setup_worker,
     }
     cmd = sys.argv[1]
     try:
