@@ -18,14 +18,16 @@ class MyService (win32serviceutil.ServiceFramework):
         win32event.SetEvent(self.hWaitStop)
 
     def SvcDoRun(self):
-        servicemanager.LogMsg(servicemanager.EVENTLOG_INFORMATION_TYPE,
-                              servicemanager.PYS_SERVICE_STARTED,
-                              (self._svc_name_, ''))
+        # servicemanager.LogMsg(servicemanager.EVENTLOG_INFORMATION_TYPE,
+                            #   servicemanager.PYS_SERVICE_STARTED,
+                            #   (self._svc_name_, ''))
         self.main()
 
     def main(self):
-        while True:
+        rc = None
+        while rc != win32event.WAIT_OBJECT_0:
             print("Hello")
+            rc = win32event.WaitForSingleObject(self.hWaitStop, 5000):
 
 if __name__ == '__main__':
     win32serviceutil.HandleCommandLine(MyService)
