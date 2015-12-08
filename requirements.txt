@@ -1,3 +1,4 @@
 anaconda-client
 anaconda-build
 conda-build
+pyyaml
