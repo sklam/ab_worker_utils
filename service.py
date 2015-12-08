@@ -27,7 +27,7 @@ class MyService (win32serviceutil.ServiceFramework):
         rc = None
         while rc != win32event.WAIT_OBJECT_0:
             print("Hello")
-            rc = win32event.WaitForSingleObject(self.hWaitStop, 5000):
+            rc = win32event.WaitForSingleObject(self.hWaitStop, 5000)
 
 if __name__ == '__main__':
     win32serviceutil.HandleCommandLine(MyService)
