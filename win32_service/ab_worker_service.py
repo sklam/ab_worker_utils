@@ -37,6 +37,9 @@ def do_work():
     run_cmd("conda info")
     run_cmd("anaconda -h")
     run_cmd("python -V")
+    yml = sys.argv[1]
+    print("Use YAML:", yml)
+    run_cmd("python control.py start {0}".format(yml))
 
 
 def main():
