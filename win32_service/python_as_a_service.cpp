@@ -36,7 +36,8 @@ void main()
 
 int WorkerLoop() {
     using namespace std;
-    ifstream fin(MY_CONFIG_FILE, "r");
+    ifstream fin(MY_CONFIG_FILE);
+    if (!fin) return 0;
     string buf;
     fin >> buf;  // get the python command
     fin.close();
