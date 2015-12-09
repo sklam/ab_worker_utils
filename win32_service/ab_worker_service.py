@@ -42,7 +42,7 @@ def do_work():
     drive, path = os.path.splitdrive(sys.prefix)
     userpath = path.lstrip('\\').split('\\')[:2]
     assert userpath[0] == 'Users'
-    home = os.path.join(drive, *userpath)
+    home = drive + '\\' + os.path.join(*userpath)
     print('HOME', home)
     os.environ['HOME'] = home
     run_cmd("python control.py start {0}".format(yml))
