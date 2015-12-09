@@ -36,6 +36,7 @@ void main()
 }
 
 int WorkerLoop(std::ostream &fout) {
+    using namespace std;
     ifstream fin(MY_CONFIG_FILE);
     fout << "Open " << MY_CONFIG_FILE << endl;
     if (!fin) {
