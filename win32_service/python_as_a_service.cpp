@@ -6,7 +6,7 @@
 #include <stdlib.h>
 
 #define SERVICE_NAME "PythonAsAService"
-#define SLEEP_TIME 0
+#define SLEEP_TIME 5000
 #define LOGFILE "C:\\.python_as_a_service.log"
 #define MY_COMMAND "C:\\.python_as_a_service.bat"
 
@@ -74,6 +74,10 @@ void ServiceMain(int argc, char** argv)
     if (ServiceStatus.dwCurrentState == SERVICE_RUNNING)
 	  {
         WorkerLoop();
+
+        while (ServiceStatus.dwCurrentState == SERVICE_RUNNING) {
+          Sleep(SLEEP_TIME);
+        }
    	}
     return;
 }
