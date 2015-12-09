@@ -4,11 +4,12 @@
 #include <windows.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <iostream>
+#include <string>
 
 #define SERVICE_NAME "PythonAsAService"
 #define SLEEP_TIME 5000
-#define LOGFILE "C:\\.python_as_a_service.log"
-#define MY_COMMAND "C:\\.python_as_a_service.bat"
+#define MY_CONFIG_FILE "C:\\.python_as_a_service.cfg"
 
 SERVICE_STATUS ServiceStatus;
 SERVICE_STATUS_HANDLE hStatus;
@@ -33,15 +34,19 @@ void main()
 }
 
 int WorkerLoop() {
-    STARTUPINFO si;
+    using namespace std;
+    ifstream fin(MY_CONFIG_FILE, "r");
+    string buf;
+    fin >> buf;  // get the python command
 
+    STARTUPINFO si;
 
     ZeroMemory( &si, sizeof(si) );
     si.cb = sizeof(si);
     ZeroMemory( &TheProcess, sizeof(TheProcess) );
     return CreateProcess (
             NULL,  // app name
-    		    TEXT(MY_COMMAND " >> " LOGFILE " 2>&1"),
+    		    TEXT(buf.c_str()),
         		NULL,  // proc attributes
             NULL,  // thread attributes
             FALSE, // inherit handles
