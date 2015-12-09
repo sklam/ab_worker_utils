@@ -18,6 +18,7 @@ void ControlHandler(DWORD request);
 int InitService();
 void WorkerLoop() ;
 
+PROCESS_INFORMATION TheProcess;
 
 void main()
 {
@@ -31,8 +32,25 @@ void main()
     StartServiceCtrlDispatcher(ServiceTable);
 }
 
-void WorkerLoop() {
-    system(MY_COMMAND " >> " LOGFILE " 2>&1");
+int WorkerLoop() {
+    STARTUPINFO si;
+
+
+    ZeroMemory( &si, sizeof(si) );
+    si.cb = sizeof(si);
+    ZeroMemory( &pi, sizeof(pi) );
+    return CreateProcess (
+            NULL,  // app name
+    		    TEXT(MY_COMMAND " >> " LOGFILE " 2>&1"),
+        		NULL,  // proc attributes
+            NULL,  // thread attributes
+            FALSE, // inherit handles
+            NORMAL_PRIORITY_CLASS, // creation flags
+        		NULL,  // environment
+        		TEXT("C:\\"),  // CWD
+        		&si,
+        		&TheProcess
+  		    );
 }
 
 
@@ -73,12 +91,18 @@ void ServiceMain(int argc, char** argv)
     // Run service once
     if (ServiceStatus.dwCurrentState == SERVICE_RUNNING)
 	  {
-        WorkerLoop();
-
-        while (ServiceStatus.dwCurrentState == SERVICE_RUNNING) {
-          Sleep(SLEEP_TIME);
-        }
+        if (! WorkerLoop() ) return;
    	}
+
+    while (ServiceStatus.dwCurrentState == SERVICE_RUNNING) {
+      Sleep(SLEEP_TIME);
+    }
+
+    // Kill Process
+    TerminateProcess(TheProcess, -1);
+    WaitForSingleObject(TheProcess, INFINITE);
+    CloseHandle(TheProcess);
+
     return;
 }
 
