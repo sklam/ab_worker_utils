@@ -32,7 +32,7 @@ void main()
 }
 
 void WorkerLoop() {
-    system(MY_COMMAND " >> " LOGFILE);
+    system(MY_COMMAND " >> " LOGFILE " 2>&1");
 }
 
 
