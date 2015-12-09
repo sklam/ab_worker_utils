@@ -8,7 +8,7 @@
 #include <fstream>
 #include <string>
 
-#define LOGFILE "C:\\.python_as_a_service.log")
+#define LOGFILE "C:\\.python_as_a_service.log"
 #define SERVICE_NAME "PythonAsAService"
 #define SLEEP_TIME 5000
 #define MY_CONFIG_FILE "C:\\.python_as_a_service.cfg"
@@ -22,6 +22,7 @@ int InitService();
 int WorkerLoop() ;
 
 PROCESS_INFORMATION TheProcess;
+std::ofstream * TheLogFile = 0;
 
 void main()
 {
@@ -110,33 +111,18 @@ void ServiceMain(int argc, char** argv)
     // Setup log file
     using std::ofstream;
     using std::endl;
-    ofstream fout(LOGFILE;
+    TheLogFile = new ofstream(LOGFILE);
 
     // Run service once
     if (ServiceStatus.dwCurrentState == SERVICE_RUNNING)
 	  {
-        if (! WorkerLoop(fout) ) return;
+        if (! WorkerLoop(*TheLogFile) ) return;
    	}
 
-    fout << "Running" << endl;
     while (ServiceStatus.dwCurrentState == SERVICE_RUNNING) {
       Sleep(SLEEP_TIME);
     }
 
-    // Kill Process
-    fout << "Kill" << endl;
-    fout << "Terminate"
-         << TerminateProcess(TheProcess.hProcess, -1)
-         << endl;
-    fout << "Wait"
-         << WaitForSingleObject(TheProcess.hProcess, INFINITE)
-         << endl;
-    fout << "Close thread"
-         << CloseHandle(TheProcess.hThread)
-         << endl;
-    fout << "Close process"
-         << CloseHandle(TheProcess.hProcess)
-         << endl;
     return;
 }
 
@@ -144,6 +130,24 @@ void ServiceMain(int argc, char** argv)
 int InitService()
 {
 	return 0;
+}
+
+void cleanup() {
+    using namespace std;
+    ostream & fout = *TheLogFile;
+    // Kill Process
+    fout << "Terminating" << endl;
+    TerminateProcess(TheProcess.hProcess, -1);
+    fout << "Waiting for process to terminate" << endl;
+    if ( WaitForSingleObject(TheProcess.hProcess, INFINITE) != WAIT_OBJECT_0 ) {
+        fout << "FAILED to wait";
+    }
+    fout << "Close handles" << endl;
+    CloseHandle(TheProcess.hThread);
+    CloseHandle(TheProcess.hProcess);
+    fout << "Done" << endl;
+    TheLogFile->close();
+    delete TheLogFile;
 }
 
 // Control handler function
@@ -154,12 +158,14 @@ void ControlHandler(DWORD request)
         case SERVICE_CONTROL_STOP:
             ServiceStatus.dwWin32ExitCode = 0;
             ServiceStatus.dwCurrentState  = SERVICE_STOPPED;
+            cleanup();
             SetServiceStatus (hStatus, &ServiceStatus);
             return;
 
         case SERVICE_CONTROL_SHUTDOWN:
             ServiceStatus.dwWin32ExitCode = 0;
             ServiceStatus.dwCurrentState  = SERVICE_STOPPED;
+            cleanup();
             SetServiceStatus (hStatus, &ServiceStatus);
             return;
 
