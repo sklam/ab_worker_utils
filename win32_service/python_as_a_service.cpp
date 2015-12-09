@@ -45,7 +45,7 @@ int WorkerLoop() {
     }
 
     string buf;
-    fin >> buf;  // get the python command
+    getline(fin, buf);  // get the python command
     fout << "Read command " << buf << endl;
     fin.close();
 
