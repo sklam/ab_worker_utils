@@ -70,12 +70,11 @@ void ServiceMain(int argc, char** argv)
     ServiceStatus.dwCurrentState = SERVICE_RUNNING;
     SetServiceStatus (hStatus, &ServiceStatus);
 
-    // The worker loop of a service
-    while (ServiceStatus.dwCurrentState == SERVICE_RUNNING)
-	{
+    // Run service once
+    if (ServiceStatus.dwCurrentState == SERVICE_RUNNING)
+	  {
         WorkerLoop();
-		Sleep(SLEEP_TIME);
-	}
+   	}
     return;
 }
 
