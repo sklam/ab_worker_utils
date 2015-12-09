@@ -36,10 +36,17 @@ void main()
 
 int WorkerLoop() {
     using namespace std;
+    ofstream fout("C:\\.python_as_a_service.log");
     ifstream fin(MY_CONFIG_FILE);
-    if (!fin) return 0;
+    fout << "Open " << MY_CONFIG_FILE << endl;
+    if (!fin) {
+      fout << "Failed to open file" << endl;
+      return 0;
+    }
+
     string buf;
     fin >> buf;  // get the python command
+    fout << "Read command " << buf << endl;
     fin.close();
 
     STARTUPINFO si;
@@ -47,7 +54,9 @@ int WorkerLoop() {
     ZeroMemory( &si, sizeof(si) );
     si.cb = sizeof(si);
     ZeroMemory( &TheProcess, sizeof(TheProcess) );
-    return CreateProcess (
+
+    fout << "Create Process" << endl;
+    int res = CreateProcess (
             NULL,  // app name
     		    (char*)(buf.c_str()),
         		NULL,  // proc attributes
@@ -59,6 +68,8 @@ int WorkerLoop() {
         		&si,
         		&TheProcess
   		    );
+   fout << "Returned " << res << endl;
+   return res;
 }
 
 
