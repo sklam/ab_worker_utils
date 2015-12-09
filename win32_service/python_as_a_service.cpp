@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
+#include <fstream>
 #include <string>
 
 #define SERVICE_NAME "PythonAsAService"
@@ -38,6 +39,7 @@ int WorkerLoop() {
     ifstream fin(MY_CONFIG_FILE, "r");
     string buf;
     fin >> buf;  // get the python command
+    fin.close();
 
     STARTUPINFO si;
 
