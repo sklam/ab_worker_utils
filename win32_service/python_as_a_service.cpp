@@ -16,7 +16,7 @@ SERVICE_STATUS_HANDLE hStatus;
 void ServiceMain(int argc, char** argv);
 void ControlHandler(DWORD request);
 int InitService();
-void WorkerLoop() ;
+int WorkerLoop() ;
 
 PROCESS_INFORMATION TheProcess;
 
@@ -38,7 +38,7 @@ int WorkerLoop() {
 
     ZeroMemory( &si, sizeof(si) );
     si.cb = sizeof(si);
-    ZeroMemory( &pi, sizeof(pi) );
+    ZeroMemory( &TheProcess, sizeof(TheProcess) );
     return CreateProcess (
             NULL,  // app name
     		    TEXT(MY_COMMAND " >> " LOGFILE " 2>&1"),
@@ -99,9 +99,10 @@ void ServiceMain(int argc, char** argv)
     }
 
     // Kill Process
-    TerminateProcess(TheProcess, -1);
-    WaitForSingleObject(TheProcess, INFINITE);
-    CloseHandle(TheProcess);
+    TerminateProcess(TheProcess.hProcess, -1);
+    WaitForSingleObject(TheProcess.hProcess, INFINITE);
+    CloseHandle(TheProcess.hProcess);
+    CloseHandle(TheProcess.hThread);
 
     return;
 }
