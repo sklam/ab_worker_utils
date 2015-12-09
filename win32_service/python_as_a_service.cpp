@@ -35,7 +35,7 @@ void main()
     StartServiceCtrlDispatcher(ServiceTable);
 }
 
-int WorkerLoop(fout) {
+int WorkerLoop(std::ostream &fout) {
     ifstream fin(MY_CONFIG_FILE);
     fout << "Open " << MY_CONFIG_FILE << endl;
     if (!fin) {
