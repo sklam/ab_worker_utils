@@ -49,7 +49,7 @@ int WorkerLoop() {
     ZeroMemory( &TheProcess, sizeof(TheProcess) );
     return CreateProcess (
             NULL,  // app name
-    		    TEXT(buf.c_str()),
+    		    (char*)(buf.c_str()),
         		NULL,  // proc attributes
             NULL,  // thread attributes
             FALSE, // inherit handles
