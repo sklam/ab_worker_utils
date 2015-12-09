@@ -8,6 +8,7 @@
 #include <fstream>
 #include <string>
 
+#define LOGFILE "C:\\.python_as_a_service.log")
 #define SERVICE_NAME "PythonAsAService"
 #define SLEEP_TIME 5000
 #define MY_CONFIG_FILE "C:\\.python_as_a_service.cfg"
@@ -34,9 +35,7 @@ void main()
     StartServiceCtrlDispatcher(ServiceTable);
 }
 
-int WorkerLoop() {
-    using namespace std;
-    ofstream fout("C:\\.python_as_a_service.log");
+int WorkerLoop(fout) {
     ifstream fin(MY_CONFIG_FILE);
     fout << "Open " << MY_CONFIG_FILE << endl;
     if (!fin) {
@@ -107,22 +106,36 @@ void ServiceMain(int argc, char** argv)
     ServiceStatus.dwCurrentState = SERVICE_RUNNING;
     SetServiceStatus (hStatus, &ServiceStatus);
 
+    // Setup log file
+    using std::ofstream;
+    using std::endl;
+    ofstream fout(LOGFILE;
+
     // Run service once
     if (ServiceStatus.dwCurrentState == SERVICE_RUNNING)
 	  {
-        if (! WorkerLoop() ) return;
+        if (! WorkerLoop(fout) ) return;
    	}
 
+    fout << "Running" << endl;
     while (ServiceStatus.dwCurrentState == SERVICE_RUNNING) {
       Sleep(SLEEP_TIME);
     }
 
     // Kill Process
-    TerminateProcess(TheProcess.hProcess, -1);
-    WaitForSingleObject(TheProcess.hProcess, INFINITE);
-    CloseHandle(TheProcess.hProcess);
-    CloseHandle(TheProcess.hThread);
-
+    fout << "Kill" << endl;
+    fout << "Terminate"
+         << TerminateProcess(TheProcess.hProcess, -1)
+         << endl;
+    fout << "Wait"
+         << WaitForSingleObject(TheProcess.hProcess, INFINITE)
+         << endl;
+    fout << "Close thread"
+         << CloseHandle(TheProcess.hThread)
+         << endl;
+    fout << "Close process"
+         << CloseHandle(TheProcess.hProcess)
+         << endl;
     return;
 }
 
