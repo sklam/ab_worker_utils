@@ -63,7 +63,7 @@ engine:
     - python=3.4 numpy=1.10
 script:
     - export HAS_HSA=1
-    - python my_conda_build.py -c numba condarecipe --build-only --no-anaconda-upload
+    - python my_conda_build.py -c numba <condarecipe> --build-only --no-anaconda-upload
 ```
 
 The separator are used because we need to special case CUDA and HSA machines.  
@@ -93,7 +93,7 @@ version: {{ environ.get('GIT_DESCRIBE_TAG','devel') }}
 If you are submitting a local directory, it won't have the git tag.
 We need to set the version to something other than a empty string; e.g. "devel".
 
-## Running on selected platform(s)
+## Running on a subset of the platforms
 
 ### One platform
 It is possible to run on individual platform using the `--platform` option of `anaconda build submit`.
@@ -110,7 +110,7 @@ The dry-run `-n` flag is useful to verify you are doing the right thing.
 
 ### Multiple platforms
 
-The only way to run on multiple platform is to modify the `.binstar.yml` (comment out the platforms that you are not interested).
+The only way to run on multiple selected platforms is to modify the `.binstar.yml` (comment out the platforms that you are not interested).
 
 ## Utilities
 
